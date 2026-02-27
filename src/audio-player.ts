@@ -20,14 +20,16 @@ export class AudioPlayer {
 
         let soundPath: string;
         const customSoundPath = config.get<string>('customSoundPath', '');
+        const volumeSetting = config.get<number>('volume', 50);
+        const volume = volumeSetting / 100; // Convert 0-100 to 0-1
 
         if (customSoundPath) {
             soundPath = customSoundPath;
-            Logger.info(`Using custom sound path: ${soundPath}`);
+            Logger.info(`Using custom sound path: ${soundPath} (Volume: ${volumeSetting}%)`);
         } else {
             const soundName = config.get<string>('sound', 'faaah');
             soundPath = path.join(context.extensionPath, 'sounds', `${soundName}.mp3`);
-            Logger.info(`Using built-in sound: ${soundName}`);
+            Logger.info(`Using built-in sound: ${soundName} (Volume: ${volumeSetting}%)`);
         }
 
         if (!fs.existsSync(soundPath)) {
@@ -39,7 +41,7 @@ export class AudioPlayer {
 
         try {
             Logger.info(`Starting playback: ${soundPath}`);
-            await soundPlay.play(soundPath);
+            await soundPlay.play(soundPath, volume);
             Logger.info('Playback completed successfully.');
         } catch (error: any) {
             const msg = `Unable to play audio. ${error.message}`;

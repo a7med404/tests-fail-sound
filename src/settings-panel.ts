@@ -79,7 +79,8 @@ export class SettingsPanel {
         const settings = {
             enabled: config.get<boolean>('enabled', true),
             sound: config.get<string>('sound', 'faaah'),
-            customSoundPath: config.get<string>('customSoundPath', '')
+            customSoundPath: config.get<string>('customSoundPath', ''),
+            volume: config.get<number>('volume', 50)
         };
 
         this._panel.webview.html = this._getHtmlForWebview(this._panel.webview, settings);
@@ -246,11 +247,42 @@ export class SettingsPanel {
             white-space: nowrap;
         }
 
-        .button-row {
+        /* Volume Slider Styles */
+        .volume-container {
             display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 20px;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            background: #30363d;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .volume-value {
+            min-width: 40px;
+            text-align: right;
+            font-family: monospace;
+            color: var(--accent-color);
+            font-weight: bold;
         }
 
         button {
@@ -318,10 +350,19 @@ export class SettingsPanel {
                 <option value="chicken-on-tree-screaming" ${settings.sound === 'chicken-on-tree-screaming' ? 'selected' : ''}>Chicken Screaming</option>
                 <option value="emotional-damage-meme" ${settings.sound === 'emotional-damage-meme' ? 'selected' : ''}>Emotional Damage!</option>
                 <option value="error" ${settings.sound === 'error' ? 'selected' : ''}>System Error</option>
+                <option value="error" ${settings.sound === 'error' ? 'selected' : ''}>System Error</option>
                 <option value="oh-shit-not-good" ${settings.sound === 'oh-shit-not-good' ? 'selected' : ''}>Oh Shit, Not Good!</option>
                 <option value="vine-boom" ${settings.sound === 'vine-boom' ? 'selected' : ''}>Vine Boom</option>
             </select>
             <div class="hint">Will play if no custom path is set.</div>
+        </div>
+
+        <div class="setting-group">
+            <label class="setting-label">Playback Volume</label>
+            <div class="volume-container">
+                <input type="range" id="volumeSlider" min="0" max="100" value="${settings.volume}">
+                <span id="volumeValue" class="volume-value">${settings.volume}%</span>
+            </div>
         </div>
 
         <div class="setting-group">
@@ -341,6 +382,8 @@ export class SettingsPanel {
 
         const enabledSwitch = document.getElementById('enabledSwitch');
         const soundList = document.getElementById('soundList');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
         const customPath = document.getElementById('customPath');
         const browseBtn = document.getElementById('browseBtn');
         const testBtn = document.getElementById('testBtn');
@@ -361,6 +404,16 @@ export class SettingsPanel {
             });
         });
 
+        volumeSlider.addEventListener('input', () => {
+            const value = volumeSlider.value;
+            volumeValue.textContent = value + '%';
+            vscode.postMessage({
+                command: 'updateConfig',
+                key: 'volume',
+                value: parseInt(value, 10)
+            });
+        });
+
         browseBtn.addEventListener('click', () => {
             vscode.postMessage({
                 command: 'selectCustomSound'
@@ -378,6 +431,8 @@ export class SettingsPanel {
             if (message.command === 'updateSettings') {
                 enabledSwitch.checked = message.settings.enabled;
                 soundList.value = message.settings.sound;
+                volumeSlider.value = message.settings.volume;
+                volumeValue.textContent = message.settings.volume + '%';
                 customPath.value = message.settings.customSoundPath;
             }
         });

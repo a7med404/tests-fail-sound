@@ -80,7 +80,8 @@
             "emotional-damage-meme",
             "error",
             "oh-shit-not-good",
-            "vine-boom"
+            "vine-boom",
+            "heknew"
           ],
           "enumDescriptions": [
             "The classic 'Faaah' sound.",
@@ -97,6 +98,13 @@
           "type": "string",
           "default": "",
           "description": "Absolute path to a custom .wav or .mp3 file. If set, this overrides the built-in sound selection."
+        },
+        "youBrokeIt.volume": {
+          "type": "integer",
+          "default": 50,
+          "minimum": 0,
+          "maximum": 100,
+          "description": "The volume of the failure sound (0-100)."
         }
       }
     }
