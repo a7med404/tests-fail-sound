@@ -3,7 +3,7 @@
   "displayName": "You Broke It",
   "description": "Plays a sound effect when a test task exits with a non-zero exit code.",
   "version": "1.0.0",
-  "publisher": "tests-fail-sound",
+  "publisher": "a7med404",
   "license": "MIT",
   "engines": {
     "vscode": "^1.107.0"
