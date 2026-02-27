@@ -18,24 +18,33 @@ export class SettingsPanel {
         // Listen for when the panel is disposed
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
+        // Listen for external config changes (sync WebView)
+        vscode.workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration('youBrokeIt')) {
+                Logger.info('SettingsPanel: External configuration change detected, updating WebView.');
+                this._update(context);
+            }
+        }, null, this._disposables);
+
         // Handle messages from the webview
         this._panel.webview.onDidReceiveMessage(
             async (message) => {
                 switch (message.command) {
                     case 'updateConfigs':
-                        const mConfig = vscode.workspace.getConfiguration('youBrokeIt');
+                        Logger.info(`SettingsPanel: Processing ${message.updates.length} updates`);
                         for (const update of message.updates) {
-                            Logger.info(`SettingsPanel: Updating config ${update.key} to ${update.value}`);
-                            await mConfig.update(update.key, update.value, vscode.ConfigurationTarget.Global);
+                            Logger.info(`SettingsPanel: Updating ${update.key} to ${update.value}`);
+                            // Getting fresh config for each update to be safe
+                            const config = vscode.workspace.getConfiguration('youBrokeIt');
+                            await config.update(update.key, update.value, vscode.ConfigurationTarget.Global);
                         }
-                        await new Promise(resolve => setTimeout(resolve, 200)); // Small delay for storage propagation
+                        // Manual refresh after all updates
                         this._update(context);
                         return;
                     case 'clearCustomSound':
-                        const cConfig = vscode.workspace.getConfiguration('youBrokeIt');
                         Logger.info('SettingsPanel: Clearing custom sound path');
-                        await cConfig.update('customSoundPath', '', vscode.ConfigurationTarget.Global);
-                        await new Promise(resolve => setTimeout(resolve, 200));
+                        const clearConfig = vscode.workspace.getConfiguration('youBrokeIt');
+                        await clearConfig.update('customSoundPath', '', vscode.ConfigurationTarget.Global);
                         this._update(context);
                         return;
                     case 'selectCustomSound':
