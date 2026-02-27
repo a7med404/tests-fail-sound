@@ -23,7 +23,9 @@ export class AudioPlayer {
         const volumeSetting = config.get<number>('volume', 50);
         const volume = volumeSetting / 100; // Convert 0-100 to 0-1
 
-        if (customSoundPath) {
+        Logger.info(`AudioPlayer: customSoundPath='${customSoundPath}', builtIn='${config.get('sound')}'`);
+
+        if (customSoundPath && customSoundPath.trim() !== '') {
             soundPath = customSoundPath;
             Logger.info(`Using custom sound path: ${soundPath} (Volume: ${volumeSetting}%)`);
         } else {

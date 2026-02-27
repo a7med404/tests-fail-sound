@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { AudioPlayer } from './audio-player';
+import { Logger } from './logger';
 
 export class SettingsPanel {
     public static currentPanel: SettingsPanel | undefined;
@@ -21,9 +22,20 @@ export class SettingsPanel {
         this._panel.webview.onDidReceiveMessage(
             async (message) => {
                 switch (message.command) {
-                    case 'updateConfig':
-                        const config = vscode.workspace.getConfiguration('youBrokeIt');
-                        await config.update(message.key, message.value, vscode.ConfigurationTarget.Global);
+                    case 'updateConfigs':
+                        const mConfig = vscode.workspace.getConfiguration('youBrokeIt');
+                        for (const update of message.updates) {
+                            Logger.info(`SettingsPanel: Updating config ${update.key} to ${update.value}`);
+                            await mConfig.update(update.key, update.value, vscode.ConfigurationTarget.Global);
+                        }
+                        await new Promise(resolve => setTimeout(resolve, 200)); // Small delay for storage propagation
+                        this._update(context);
+                        return;
+                    case 'clearCustomSound':
+                        const cConfig = vscode.workspace.getConfiguration('youBrokeIt');
+                        Logger.info('SettingsPanel: Clearing custom sound path');
+                        await cConfig.update('customSoundPath', '', vscode.ConfigurationTarget.Global);
+                        await new Promise(resolve => setTimeout(resolve, 200));
                         this._update(context);
                         return;
                     case 'selectCustomSound':
@@ -370,6 +382,7 @@ export class SettingsPanel {
             <label class="setting-label">Custom Sound Path Override</label>
             <div class="custom-path-container">
                 <input type="text" id="customPath" value="${settings.customSoundPath}" readonly placeholder="None selected">
+                <button id="clearBtn" class="btn-secondary" style="background-color: var(--danger-color); color: white;">✕</button>
                 <button id="browseBtn" class="btn-secondary">Browse</button>
             </div>
             <div class="hint">Overrides the built-in sound selection.</div>
@@ -387,27 +400,25 @@ export class SettingsPanel {
         const volumeValue = document.getElementById('volumeValue');
         const customPath = document.getElementById('customPath');
         const browseBtn = document.getElementById('browseBtn');
+        const clearBtn = document.getElementById('clearBtn');
         const testBtn = document.getElementById('testBtn');
 
         enabledSwitch.addEventListener('change', () => {
             vscode.postMessage({
-                command: 'updateConfig',
-                key: 'enabled',
-                value: enabledSwitch.checked
+                command: 'updateConfigs',
+                updates: [{ key: 'enabled', value: enabledSwitch.checked }]
             });
         });
 
         soundList.addEventListener('change', () => {
+            // Instant local feedback to show built-in is prioritized
+            customPath.value = '';
             vscode.postMessage({
-                command: 'updateConfig',
-                key: 'sound',
-                value: soundList.value
-            });
-            // Clear custom path when selecting a built-in sound
-            vscode.postMessage({
-                command: 'updateConfig',
-                key: 'customSoundPath',
-                value: ''
+                command: 'updateConfigs',
+                updates: [
+                    { key: 'sound', value: soundList.value },
+                    { key: 'customSoundPath', value: '' }
+                ]
             });
         });
 
@@ -415,15 +426,21 @@ export class SettingsPanel {
             const value = volumeSlider.value;
             volumeValue.textContent = value + '%';
             vscode.postMessage({
-                command: 'updateConfig',
-                key: 'volume',
-                value: parseInt(value, 10)
+                command: 'updateConfigs',
+                updates: [{ key: 'volume', value: parseInt(value, 10) }]
             });
         });
 
         browseBtn.addEventListener('click', () => {
             vscode.postMessage({
                 command: 'selectCustomSound'
+            });
+        });
+
+        clearBtn.addEventListener('click', () => {
+            customPath.value = '';
+            vscode.postMessage({
+                command: 'clearCustomSound'
             });
         });
 
