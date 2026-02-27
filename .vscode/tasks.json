@@ -6,7 +6,7 @@
 		{
 			"type": "npm",
 			"script": "watch",
-			"problemMatcher": "$ts-webpack-watch",
+			"problemMatcher": "$webpack-watch",
 			"isBackground": true,
 			"presentation": {
 				"reveal": "never",
@@ -34,7 +34,8 @@
 				"npm: watch",
 				"npm: watch-tests"
 			],
-			"problemMatcher": []
+			"isBackground": true,
+			"problemMatcher": "$tsc-watch"
 		}
 	]
 }

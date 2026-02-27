@@ -1,6 +1,6 @@
 {
-  "name": "tests-fail-sound",
-  "displayName": "Tests Fail Sound",
+  "name": "you-broke-it",
+  "displayName": "You Broke It",
   "description": "Plays a sound effect when a test task exits with a non-zero exit code.",
   "version": "1.0.0",
   "publisher": "tests-fail-sound",
@@ -42,6 +42,64 @@
   },
   "dependencies": {
     "sound-play": "^1.1.0"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "you-broke-it.selectCustomSound",
+        "title": "You Broke It: Select Custom Sound..."
+      },
+      {
+        "command": "you-broke-it.openConfig",
+        "title": "You Broke It: Configure..."
+      },
+      {
+        "command": "you-broke-it.testSound",
+        "title": "You Broke It: Test Current Sound"
+      },
+      {
+        "command": "you-broke-it.generateTrombone",
+        "title": "You Broke It: Generate Trombone Sound"
+      }
+    ],
+    "configuration": {
+      "title": "You Broke It",
+      "properties": {
+        "youBrokeIt.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to play a sound when tests fail."
+        },
+        "youBrokeIt.sound": {
+          "type": "string",
+          "default": "faaah",
+          "enum": [
+            "faaah",
+            "brother-ewwwwwww",
+            "chicken-on-tree-screaming",
+            "emotional-damage-meme",
+            "error",
+            "oh-shit-not-good",
+            "vine-boom"
+          ],
+          "enumDescriptions": [
+            "The classic 'Faaah' sound.",
+            "Brother Ewwwwwww!",
+            "Chicken on tree screaming.",
+            "Emotional Damage!",
+            "System Error sound.",
+            "Oh shit, not good!",
+            "Vine Boom sound."
+          ],
+          "description": "Select a built-in sound to play."
+        },
+        "youBrokeIt.customSoundPath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to a custom .wav or .mp3 file. If set, this overrides the built-in sound selection."
+        }
+      }
+    }
   }
 }
 
