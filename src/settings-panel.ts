@@ -367,13 +367,14 @@ export class SettingsPanel {
                 <option value="oh-shit-not-good" ${settings.sound === 'oh-shit-not-good' ? 'selected' : ''}>Oh Shit, Not Good!</option>
                 <option value="vine-boom" ${settings.sound === 'vine-boom' ? 'selected' : ''}>Vine Boom</option>
             </select>
-            <div class="hint">Will play if no custom path is set.</div>
+            <div class="hint">Plays when custom override is empty.</div>
         </div>
 
         <div class="setting-group">
-            <label class="setting-label">Playback Volume</label>
+            <label class="setting-label">🔊 Master Volume</label>
             <div class="volume-container">
-                <input type="range" id="volumeSlider" min="0" max="100" value="${settings.volume}">
+                <span style="font-size: 0.7rem; color: #8b949e;">0%</span>
+                <input type="range" id="volumeSlider" min="0" max="100" value="${settings.volume}" style="height: 10px; cursor: pointer;">
                 <span id="volumeValue" class="volume-value">${settings.volume}%</span>
             </div>
         </div>
@@ -381,11 +382,11 @@ export class SettingsPanel {
         <div class="setting-group">
             <label class="setting-label">Custom Sound Path Override</label>
             <div class="custom-path-container">
-                <input type="text" id="customPath" value="${settings.customSoundPath}" readonly placeholder="None selected">
-                <button id="clearBtn" class="btn-secondary" style="background-color: var(--danger-color); color: white;">✕</button>
-                <button id="browseBtn" class="btn-secondary">Browse</button>
+                <input type="text" id="customPath" value="${settings.customSoundPath}" readonly placeholder="Using built-in sound...">
+                <button id="clearBtn" class="btn-secondary" title="Clear and use built-in" style="background-color: var(--danger-color); color: white; padding: 10px;">✕</button>
+                <button id="browseBtn" class="btn-secondary" style="padding: 10px;">Browse...</button>
             </div>
-            <div class="hint">Overrides the built-in sound selection.</div>
+            <div class="hint">Browse for any .mp3 or .wav on your disk.</div>
         </div>
 
         <button id="testBtn" class="btn-test">🔊 Test Current Sound</button>
@@ -411,8 +412,8 @@ export class SettingsPanel {
         });
 
         soundList.addEventListener('change', () => {
-            // Instant local feedback to show built-in is prioritized
-            customPath.value = '';
+            // Priority Fix: selecting a built-in sound ALWAYS clears the custom path
+            customPath.value = 'Using built-in: ' + soundList.value;
             vscode.postMessage({
                 command: 'updateConfigs',
                 updates: [
@@ -425,29 +426,26 @@ export class SettingsPanel {
         volumeSlider.addEventListener('input', () => {
             const value = volumeSlider.value;
             volumeValue.textContent = value + '%';
+        });
+
+        volumeSlider.addEventListener('change', () => {
             vscode.postMessage({
                 command: 'updateConfigs',
-                updates: [{ key: 'volume', value: parseInt(value, 10) }]
+                updates: [{ key: 'volume', value: parseInt(volumeSlider.value, 10) }]
             });
         });
 
         browseBtn.addEventListener('click', () => {
-            vscode.postMessage({
-                command: 'selectCustomSound'
-            });
+            vscode.postMessage({ command: 'selectCustomSound' });
         });
 
         clearBtn.addEventListener('click', () => {
-            customPath.value = '';
-            vscode.postMessage({
-                command: 'clearCustomSound'
-            });
+            customPath.value = 'Using built-in: ' + soundList.value;
+            vscode.postMessage({ command: 'clearCustomSound' });
         });
 
         testBtn.addEventListener('click', () => {
-            vscode.postMessage({
-                command: 'testSound'
-            });
+            vscode.postMessage({ command: 'testSound' });
         });
 
         window.addEventListener('message', event => {
