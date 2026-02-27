@@ -24,6 +24,7 @@ export class SettingsPanel {
                     case 'updateConfig':
                         const config = vscode.workspace.getConfiguration('youBrokeIt');
                         await config.update(message.key, message.value, vscode.ConfigurationTarget.Global);
+                        this._update(context);
                         return;
                     case 'selectCustomSound':
                         await vscode.commands.executeCommand('you-broke-it.selectCustomSound');
@@ -350,7 +351,7 @@ export class SettingsPanel {
                 <option value="chicken-on-tree-screaming" ${settings.sound === 'chicken-on-tree-screaming' ? 'selected' : ''}>Chicken Screaming</option>
                 <option value="emotional-damage-meme" ${settings.sound === 'emotional-damage-meme' ? 'selected' : ''}>Emotional Damage!</option>
                 <option value="error" ${settings.sound === 'error' ? 'selected' : ''}>System Error</option>
-                <option value="error" ${settings.sound === 'error' ? 'selected' : ''}>System Error</option>
+                <option value="heknew" ${settings.sound === 'heknew' ? 'selected' : ''}>He Knew</option>
                 <option value="oh-shit-not-good" ${settings.sound === 'oh-shit-not-good' ? 'selected' : ''}>Oh Shit, Not Good!</option>
                 <option value="vine-boom" ${settings.sound === 'vine-boom' ? 'selected' : ''}>Vine Boom</option>
             </select>
@@ -401,6 +402,12 @@ export class SettingsPanel {
                 command: 'updateConfig',
                 key: 'sound',
                 value: soundList.value
+            });
+            // Clear custom path when selecting a built-in sound
+            vscode.postMessage({
+                command: 'updateConfig',
+                key: 'customSoundPath',
+                value: ''
             });
         });
 
