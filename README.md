@@ -1,24 +1,50 @@
-# Tests Fail Sound
+# You Broke It! — VS Code Extension
 
-A VS Code extension that plays a sound effect whenever a test task exits with a non-zero exit code (i.e. your tests fail).
+[![Version](https://img.shields.io/visual-studio-marketplace/v/a7med404.you-broke-it)](https://marketplace.visualstudio.com/items?itemName=a7med404.you-broke-it)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/a7med404.you-broke-it)](https://marketplace.visualstudio.com/items?itemName=a7med404.you-broke-it)
+
+A lightweight VS Code extension that plays a sound effect whenever a task (like your test runner) fails. Keep your focus on the code and get immediate audio feedback when things go south!
+
+![Icon](images/icon.jpg)
 
 ## Features
 
-- Automatically listens for any VS Code task whose name contains the word **"test"** (case-insensitive).
-- Plays a custom `.mp3` sound when that task fails (exit code ≠ 0).
-- Works cross-platform (macOS, Windows, Linux) with no extra system dependencies required.
+- **Automatic Task Monitoring**: Listens for any VS Code task whose name contains "test" (case-insensitive).
+- **Audio Feedback**: Plays a sound when a task exits with a non-zero exit code.
+- **Built-in Meme Sounds**: Choose from several fun sounds like "Vine Boom", "Emotional Damage", and "Brother Ewwww".
+- **Custom Sound Support**: Use your own `.wav` or `.mp3` files.
+- **Cross-Platform**: Works on macOS, Windows, and Linux.
 
-## Setup
+## How It Works
 
-1. Place your `.mp3` file in the `sounds/` directory inside the extension folder and name it `faaah.mp3`.
-2. The extension activates automatically on workspace startup — no manual command needed.
+The extension automatically activates when you open a workspace. It monitors all running tasks. If a task fails (returns a non-zero exit code) and its name includes "test", the selected sound will play at the configured volume.
 
-## Requirements
+## Configuration
 
-No additional system-level dependencies are required. The extension uses [`sound-play`](https://www.npmjs.com/package/sound-play), which leverages native OS audio players.
+You can customize the extension behavior in your VS Code settings under `You Broke It`:
 
-## Release Notes
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `youBrokeIt.enabled` | `boolean` | `true` | Toggle the sound effect on/off. |
+| `youBrokeIt.sound` | `string` | `faaah` | Select one of the built-in sounds. |
+| `youBrokeIt.customSoundPath` | `string` | `""` | Provide an absolute path to a custom audio file. |
+| `youBrokeIt.volume` | `integer` | `50` | Volume level (0 to 100). |
 
-### 1.0.0
+## Available Sounds
 
-Initial release.
+- **faaah**: The classic scream.
+- **brother-ewwwwwww**: The "Brother Ewww" meme.
+- **chicken-on-tree-screaming**: A chaotic chicken.
+- **emotional-damage-meme**: "Emotional Damage!"
+- **vine-boom**: The dramatic bass boom.
+- ...and more!
+
+## Commands
+
+- `You Broke It: Configure...`: Opens the extension settings.
+- `You Broke It: Select Custom Sound...`: Quickly pick a custom sound file.
+- `You Broke It: Test Current Sound`: plays the current sound for testing.
+
+## License
+
+MIT

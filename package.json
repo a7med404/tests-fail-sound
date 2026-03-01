@@ -5,6 +5,14 @@
   "version": "1.0.0",
   "publisher": "a7med404",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/a7med404/you-broke-it.git"
+  },
+  "homepage": "https://github.com/a7med404/you-broke-it",
+  "bugs": {
+    "url": "https://github.com/a7med404/you-broke-it/issues"
+  },
   "engines": {
     "vscode": "^1.107.0"
   },
@@ -14,6 +22,7 @@
   "activationEvents": [
     "onStartupFinished"
   ],
+  "icon": "images/icon.jpg",
   "main": "./dist/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run package",
