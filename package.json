@@ -1,8 +1,8 @@
 {
   "name": "you-broke-it",
   "displayName": "You Broke It",
-  "description": "Plays a sound effect when a test task exits with a non-zero exit code.",
-  "version": "1.0.0",
+  "description": "Plays an audible alert when tests fail in VS Code, antigravity, cursor, and more using the official Testing API. Works with Jest, Vitest, Mocha, PHPUnit, and more.",
+  "version": "1.1.0",
   "publisher": "a7med404",
   "license": "MIT",
   "repository": {
@@ -17,7 +17,30 @@
     "vscode": "^1.107.0"
   },
   "categories": [
+    "Testing",
+    "Debuggers",
+    "Linters",
     "Other"
+  ],
+  "keywords": [
+    "test",
+    "sound",
+    "failure",
+    "jest",
+    "vitest",
+    "mocha",
+    "phpunit",
+    "vscode-testing-api",
+    "alert",
+    "meme",
+    "faaah",
+    "brother-ewwwwwww",
+    "chicken-on-tree-screaming",
+    "emotional-damage-meme",
+    "error",
+    "oh-shit-not-good",
+    "vine-boom",
+    "heknew"
   ],
   "activationEvents": [
     "onStartupFinished"

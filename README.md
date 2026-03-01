@@ -3,17 +3,19 @@
 [![Version](https://img.shields.io/visual-studio-marketplace/v/a7med404.you-broke-it)](https://marketplace.visualstudio.com/items?itemName=a7med404.you-broke-it)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/a7med404.you-broke-it)](https://marketplace.visualstudio.com/items?itemName=a7med404.you-broke-it)
 
-A lightweight VS Code extension that plays a sound effect whenever a task (like your test runner) fails. Keep your focus on the code and get immediate audio feedback when things go south!
+Plays an audible alert when tests fail in VS Code using the official Testing API. Get a "VS Code test failure sound" exactly when you need it.
 
-![Icon](images/icon.jpg)
+Works seamlessly with **Jest**, **Vitest**, **Mocha**, **PHPUnit**, and any other test runner that integrates with VS Code tasks or the Testing API. Keep your focus on the code and get immediate "play sound on test failure" feedback when things go south!
+
+![Demo](images/demo.webp)
 
 ## Features
 
-- **Automatic Task Monitoring**: Listens for any VS Code task whose name contains "test" (case-insensitive).
-- **Audio Feedback**: Plays a sound when a task exits with a non-zero exit code.
-- **Built-in Meme Sounds**: Choose from several fun sounds like "Vine Boom", "Emotional Damage", and "Brother Ewwww".
-- **Custom Sound Support**: Use your own `.wav` or `.mp3` files.
-- **Cross-Platform**: Works on macOS, Windows, and Linux.
+- **Official Testing API Support**: Plays an audible alert when tests fail in VS Code using the official Testing API or custom tasks.
+- **Framework Agnostic**: Works seamlessly with **Jest**, **Vitest**, **Mocha**, **PHPUnit**, and any other test runner. 
+- **Immediate Audio Feedback**: Get a "VS Code test failure sound" (like "Vine Boom", "Emotional Damage", or "Brother Eww") the moment a test suite fails.
+- **Custom Sound Support**: Use your own `.wav` or `.mp3` files for a personalized "Jest test failure alert."
+- **Cross-Platform**: Tested on macOS, Windows, and Linux.
 
 ## How It Works
 
